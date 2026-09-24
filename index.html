@@ -20,8 +20,67 @@
   <!-- Footnote reinforcing data privacy --> 
   <p class="text-center text-xs text-gray-400 mt-4">Data is processed entirely on-device. No information is stored or transmitted.</p> 
   
-  <!-- PDF Generation Logic --> <script> async function generatePDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); 
-                                                                       oo// Get form values const projName = document.getElementById('projName').value || 'N/A'; const inspector = document.getElementById('inspector').value || 'N/A'; const notes = document.getElementById('notes').value || 'No notes provided.'; const date = new Date().toLocaleDateString(); // Structure the PDF Template Layout doc.setFillColor(30, 41, 59); // Dark blue header block doc.rect(0, 0, 210, 30, 'F'); doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("OFFICIAL FIELD INSPECTION REPORT", 15, 20); // Metadata Grid doc.setTextColor(50, 50, 50); doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text("Date:", 15, 45); doc.setFont("helvetica", "normal"); doc.text(date, 50, 45); doc.setFont("helvetica", "bold"); doc.text("Project/Site:", 15, 55); doc.setFont("helvetica", "normal"); doc.text(projName, 50, 55); doc.setFont("helvetica", "bold"); doc.text("Inspector:", 15, 65); doc.setFont("helvetica", "normal"); doc.text(inspector, 50, 65); // Divider Line doc.setDrawColor(200, 200, 200); doc.line(15, 75, 195, 75); // Section: Notes doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text("Field Observations:", 15, 85); doc.setFont("helvetica", "normal"); doc.setFontSize(11); // splitTextToSize automatically wraps long mobile text inputs cleanly into the PDF template const splitNotes = doc.splitTextToSize(notes, 
+  <!-- PDF Generation Logic --> 
+<script>
+    async function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-180); doc.text(splitNotes, 15, 95); // Save the document or open the mobile print dialog doc.save(`Field_Report_${projName.replace(/\s+/g, '_')}.pdf`); } </script> </body> </html>
+        // 1. Get form values
+        const projName = document.getElementById('projName').value || 'N/A';
+        const inspector = document.getElementById('inspector').value || 'N/A';
+        const notes = document.getElementById('notes').value || 'No notes provided.';
+        const date = new Date().toLocaleDateString();
+
+        // 2. Structure the PDF Template Layout
+        doc.setFillColor(30, 41, 59); // Dark blue header block
+        doc.rect(0, 0, 210, 30, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("OFFICIAL FIELD INSPECTION REPORT", 15, 20);
+
+        // Metadata Grid
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("Date:", 15, 45);
+        doc.setFont("helvetica", "normal");
+        doc.text(date, 50, 45);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("Project/Site:", 15, 55);
+        doc.setFont("helvetica", "normal");
+        doc.text(projName, 50, 55);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("Inspector:", 15, 65);
+        doc.setFont("helvetica", "normal");
+        doc.text(inspector, 50, 65);
+
+        // Divider Line
+        doc.setDrawColor(200, 200, 200);
+        doc.line(15, 75, 195, 75);
+
+        // Section: Notes
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.text("Field Observations:", 15, 85);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        const splitNotes = doc.splitTextToSize(notes, 180);
+        doc.text(splitNotes, 15, 95);
+
+        // 3. MOBILE FIXED EXPORT ENGINE
+        // Convert the raw data stream directly into a local binary object
+        const pdfBlob = doc.output('blob');
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
+        // Force mobile Chrome to cleanly handle the PDF natively in a fresh view pane
+        window.open(blobUrl, '_blank');
+    }
+</script>
+</body> </html>
 
