@@ -145,40 +145,46 @@ async function generatePDF() {
     
     currentY += 8; // Step anchor down past the table header element
 
-    // Find and map every table row element inside the mobile app DOM
-    const checklistRows = document.querySelectorAll("tbody tr");
-    
-    checklistRows.forEach((row) => {
-        const itemText = row.cells[0].innerText;
-        const statusVal = row.cells[1].querySelector("button").getAttribute("data-status") || " ";
+    // Iterate rows and inject values dynamically into the layout blueprint
+            const checklistRows = document.querySelectorAll("tbody tr");
+            checklistRows.forEach((row) => {
+                // Safely grab row text and strip out nested button characters
+                const itemText = row.cells[0].innerText || 'Inspection Item';
+                const statusVal = row.cells[1].querySelector("button").getAttribute("data-status") || "";
 
-        doc.setFont("helvetica", "normal");
-        doc.text(itemText, 20, currentY + 7);
-        
-        // Add colour logic specifically for the symbols inside the template grid output
-        if (statusVal === "✓") {
-            doc.setTextColor(16, 185, 129); // Emerald green for clear checks
-        } else if (statusVal === "✗") {
-            doc.setTextColor(239, 68, 68);  // Rose crimson red for system failures
-        } else {
-            doc.setTextColor(156, 163, 175);
-        }
-        
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(statusVal, 170, currentY + 7);
-        
-        // Reset basic document context values for standard body copy
-        doc.setTextColor(50, 50, 50);
-        doc.setFontSize(10);
+                // Render the static item description left-aligned
+                doc.setFont("helvetica", "normal");
+                doc.text(itemText, 20, currentY + 7);
+                
+                // --- SAFELY TRANSLATE UNICODE FOR THE LATIN-1 PDF ENGINE ---
+                let pdfReportSymbol = "[  ]"; // Default layout representation for blank/unchecked
+                
+                if (statusVal === "✓") {
+                    doc.setTextColor(16, 185, 129); // Keep your emerald green tone
+                    pdfReportSymbol = "[ Y ]";       // Safe representation for Passed
+                } else if (statusVal === "✗") {
+                    doc.setTextColor(239, 68, 68);  // Keep your crimson red tone
+                    pdfReportSymbol = "[ N ]";       // Safe representation for Failed
+                } else {
+                    doc.setTextColor(156, 163, 175); // Light grey for missing entries
+                    pdfReportSymbol = "[   ]";
+                }
+                
+                // Write out the safe character status string right-aligned
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.text(pdfReportSymbol, 168, currentY + 7);
+                
+                // Re-establish basic base color and text constraints for the next loop run
+                doc.setTextColor(50, 50, 50);
+                doc.setFontSize(10);
 
-        // Draw structural dividing separator cell box lines
-        doc.setDrawColor(229, 231, 235);
-        doc.line(15, currentY + 11, 195, currentY + 11);
-        
-        currentY += 11; // Advance spacing down for next row segment block
-    });
-
+                // Draw cell split grid dividers
+                doc.setDrawColor(229, 231, 235);
+                doc.line(15, currentY + 11, 195, currentY + 11);
+                
+                currentY += 11;
+            });
     // Append observations block beneath the dynamically sized table boundary
     currentY += 10;
     doc.setFont("helvetica", "bold");
