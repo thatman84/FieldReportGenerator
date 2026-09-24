@@ -12,6 +12,16 @@
   <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 w-full"> 
     <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 flex items-center gap-2"> 📋 General Engineer Report v3</h1> 
     
+<form id="reportForm" class="space-y-4"> <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Project / Location Name</label>
+      <input type="text" id="projName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. Site Alpha"> </div> 
+  
+      <div> <label class="block text-sm font-medium text-gray-700 mb-1">Engineer Name</label>
+        <input type="text" id="inspector" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="John Doe"> </div>
+  
+      <div> <label class="block text-sm font-medium text-gray-700 mb-1">Field Observations & Notes</label>
+        <textarea id="notes" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Describe site conditions..."></textarea> </div>
+  
     <!-- Mobile-Optimised Inspection Checklist Grid -->
 <div class="mb-6">
     <label class="block text-sm font-medium text-gray-700 mb-2">System Inspection Checklist</label>
@@ -63,14 +73,8 @@
         </table>
     </div>
 </div>
-    <form id="reportForm" class="space-y-4"> <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Project / Location Name</label>
-      <input type="text" id="projName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. Site Alpha"> </div> 
-      <div> <label class="block text-sm font-medium text-gray-700 mb-1">Engineer Name</label>
-        <input type="text" id="inspector" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="John Doe"> </div>
-      <div> <label class="block text-sm font-medium text-gray-700 mb-1">Field Observations & Notes</label>
-        <textarea id="notes" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Describe site conditions..."></textarea> </div>
-      <button type="button" onclick="generatePDF()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition duration-200 mt-6 flex justify-center items-center gap-2"> 🖨️ Export & Print PDF </button> </form> </div>
+  
+    <button type="button" onclick="generatePDF()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition duration-200 mt-6 flex justify-center items-center gap-2"> 🖨️ Export & Print PDF </button> </form> </div>
   <!-- Footnote reinforcing data privacy --> 
   <p class="text-center text-xs text-gray-400 mt-4">Data is processed entirely on-device. No information is stored or transmitted.</p> 
   
