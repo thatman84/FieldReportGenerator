@@ -76,11 +76,7 @@
   
   <!-- PDF Generation Logic --> 
 <script>
-    async function generatePDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        // 1. The Mobile Screen Cycle Engine (Blank -> Tick -> Cross -> Repeat)
+   // 1. The Mobile Screen Cycle Engine (Blank -> Tick -> Cross -> Repeat)
 function cycleStatus(btn) {
     const states = ["", "✓", "✗"];
     let current = btn.getAttribute("data-status") || "";
