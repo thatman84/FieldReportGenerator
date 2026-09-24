@@ -11,6 +11,58 @@
   <!-- Mobile App Container -->
   <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 w-full"> 
     <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 flex items-center gap-2"> 📋 General Engineer Report</h1> 
+    
+    <!-- Mobile-Optimised Inspection Checklist Grid -->
+<div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">System Inspection Checklist</label>
+    <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th class="p-3 w-2/3">Inspection Item</th>
+                    <th class="p-3 w-1/3 text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-sm">
+                <!-- Row 1 -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-700 font-medium">Structural Foundation & Walls</td>
+                    <td class="p-2 text-center">
+                        <button type="button" onclick="cycleStatus(this)" class="checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800" data-status="">&nbsp;</button>
+                    </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-700 font-medium">Electrical Systems & Wiring</td>
+                    <td class="p-2 text-center">
+                        <button type="button" onclick="cycleStatus(this)" class="checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800" data-status="">&nbsp;</button>
+                    </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-700 font-medium">Plumbing & Drainage Flow</td>
+                    <td class="p-2 text-center">
+                        <button type="button" onclick="cycleStatus(this)" class="checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800" data-status="">&nbsp;</button>
+                    </td>
+                </tr>
+                <!-- Row 4 -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-700 font-medium">HVAC Venting & Filtration</td>
+                    <td class="p-2 text-center">
+                        <button type="button" onclick="cycleStatus(this)" class="checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800" data-status="">&nbsp;</button>
+                    </td>
+                </tr>
+                <!-- Row 5 -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-700 font-medium">Fire Safety & Alarm Panels</td>
+                    <td class="p-2 text-center">
+                        <button type="button" onclick="cycleStatus(this)" class="checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800" data-status="">&nbsp;</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
     <form id="reportForm" class="space-y-4"> <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Project / Location Name</label>
       <input type="text" id="projName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. Site Alpha"> </div> 
@@ -28,61 +80,121 @@
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // 1. Get form values
-        const projName = document.getElementById('projName').value || 'N/A';
-        const inspector = document.getElementById('inspector').value || 'N/A';
-        const notes = document.getElementById('notes').value || 'No notes provided.';
-        const date = new Date().toLocaleDateString();
-
-        // 2. Structure the PDF Template Layout
-        doc.setFillColor(30, 41, 59); // Dark blue header block
-        doc.rect(0, 0, 210, 30, 'F');
-        
-        doc.setTextColor(255, 255, 255);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
-        doc.text("OFFICIAL FIELD INSPECTION REPORT", 15, 20);
-
-        // Metadata Grid
-        doc.setTextColor(50, 50, 50);
-        doc.setFontSize(11);
-        doc.setFont("helvetica", "bold");
-        doc.text("Date:", 15, 45);
-        doc.setFont("helvetica", "normal");
-        doc.text(date, 50, 45);
-
-        doc.setFont("helvetica", "bold");
-        doc.text("Project/Site:", 15, 55);
-        doc.setFont("helvetica", "normal");
-        doc.text(projName, 50, 55);
-
-        doc.setFont("helvetica", "bold");
-        doc.text("Inspector:", 15, 65);
-        doc.setFont("helvetica", "normal");
-        doc.text(inspector, 50, 65);
-
-        // Divider Line
-        doc.setDrawColor(200, 200, 200);
-        doc.line(15, 75, 195, 75);
-
-        // Section: Notes
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(13);
-        doc.text("Field Observations:", 15, 85);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        const splitNotes = doc.splitTextToSize(notes, 180);
-        doc.text(splitNotes, 15, 95);
-
-        // 3. MOBILE FIXED EXPORT ENGINE
-        // Convert the raw data stream directly into a local binary object
-        const pdfBlob = doc.output('blob');
-        const blobUrl = URL.createObjectURL(pdfBlob);
-
-        // Force mobile Chrome to cleanly handle the PDF natively in a fresh view pane
-        window.open(blobUrl, '_blank');
+        // 1. The Mobile Screen Cycle Engine (Blank -> Tick -> Cross -> Repeat)
+function cycleStatus(btn) {
+    const states = ["", "✓", "✗"];
+    let current = btn.getAttribute("data-status") || "";
+    let nextIndex = (states.indexOf(current) + 1) % states.length;
+    let nextState = states[nextIndex];
+    
+    // Update local element data reference
+    btn.setAttribute("data-status", nextState);
+    
+    // Custom mobile UI layout tweaks depending on current state selection
+    if (nextState === "✓") {
+        btn.innerHTML = "✓";
+        btn.className = "checklist-btn w-12 h-12 rounded-lg border border-emerald-500 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-emerald-50 text-emerald-600";
+    } else if (nextState === "✗") {
+        btn.innerHTML = "✗";
+        btn.className = "checklist-btn w-12 h-12 rounded-lg border border-rose-500 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-rose-50 text-rose-600";
+    } else {
+        btn.innerHTML = "&nbsp;";
+        btn.className = "checklist-btn w-12 h-12 rounded-lg border border-gray-300 font-bold text-xl inline-flex items-center justify-center transition focus:outline-none bg-gray-50 text-gray-800";
     }
+}
+
+// 2. The Updated PDF Generation Engine Integration
+async function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Fetch field form values
+    const projName = document.getElementById('projName').value || 'N/A';
+    const inspector = document.getElementById('inspector').value || 'N/A';
+    const notes = document.getElementById('notes').value || 'No notes provided.';
+    const date = new Date().toLocaleDateString();
+
+    // Render Standard Document Header Banner block
+    doc.setFillColor(30, 41, 59);
+    doc.rect(0, 0, 210, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("OFFICIAL FIELD INSPECTION REPORT", 15, 20);
+
+    // Meta-Data Configuration Blocks
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
+    doc.text(`Date: ${date}`, 15, 42);
+    doc.text(`Project/Site: ${projName}`, 15, 49);
+    doc.text(`Inspector: ${inspector}`, 15, 56);
+
+    // DRAW THE TWO-COLUMN PDF CHECKLIST GRID
+    let currentY = 70; // Current vertical layout anchor height coordinate
+    
+    // Draw Table Header Block
+    doc.setFillColor(243, 244, 246);
+    doc.rect(15, currentY, 180, 8, 'F');
+    doc.setDrawColor(209, 213, 219);
+    doc.line(15, currentY, 195, currentY);
+    doc.line(15, currentY + 8, 195, currentY + 8);
+    
+    doc.setFont("helvetica", "bold");
+    doc.text("INSPECTION ITEM", 20, currentY + 5.5);
+    doc.text("STATUS", 165, currentY + 5.5);
+    
+    currentY += 8; // Step anchor down past the table header element
+
+    // Find and map every table row element inside the mobile app DOM
+    const checklistRows = document.querySelectorAll("tbody tr");
+    
+    checklistRows.forEach((row) => {
+        const itemText = row.cells[0].innerText;
+        const statusVal = row.cells[1].querySelector("button").getAttribute("data-status") || " ";
+
+        doc.setFont("helvetica", "normal");
+        doc.text(itemText, 20, currentY + 7);
+        
+        // Add colour logic specifically for the symbols inside the template grid output
+        if (statusVal === "✓") {
+            doc.setTextColor(16, 185, 129); // Emerald green for clear checks
+        } else if (statusVal === "✗") {
+            doc.setTextColor(239, 68, 68);  // Rose crimson red for system failures
+        } else {
+            doc.setTextColor(156, 163, 175);
+        }
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(statusVal, 170, currentY + 7);
+        
+        // Reset basic document context values for standard body copy
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(10);
+
+        // Draw structural dividing separator cell box lines
+        doc.setDrawColor(229, 231, 235);
+        doc.line(15, currentY + 11, 195, currentY + 11);
+        
+        currentY += 11; // Advance spacing down for next row segment block
+    });
+
+    // Append observations block beneath the dynamically sized table boundary
+    currentY += 10;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Field Observations:", 15, currentY);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    const splitNotes = doc.splitTextToSize(notes, 180);
+    doc.text(splitNotes, 15, currentY + 8);
+
+    // Safe device-agnostic preview launcher loop stream block
+    const pdfBlob = doc.output('blob');
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    window.open(blobUrl, '_blank');
+}
 </script>
 </body> </html>
 
