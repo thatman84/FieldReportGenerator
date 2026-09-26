@@ -80,6 +80,45 @@
   
   <!-- PDF Generation Logic --> 
 <script>
+  // Static Report Template — draws letterhead, footer, and border on the current page
+function drawReportTemplate(doc, pageNum, totalPages) {
+    const pageWidth = 210;
+    const pageHeight = 297;
+
+    // --- HEADER BANNER ---
+    doc.setFillColor(30, 41, 59);
+    doc.rect(0, 0, pageWidth, 30, 'F');
+
+    // Optional logo placeholder box (swap for doc.addImage() if you have a logo file)
+    doc.setDrawColor(255, 255, 255);
+    doc.rect(15, 6, 18, 18);
+    doc.setFontSize(7);
+    doc.setTextColor(255, 255, 255);
+    doc.text("LOGO", 19, 16);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("OFFICIAL FIELD INSPECTION REPORT", 40, 15);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Your Company Name Ltd.", 40, 22);
+
+    // --- PAGE BORDER ---
+    doc.setDrawColor(200, 200, 200);
+    doc.rect(8, 35, pageWidth - 16, pageHeight - 55);
+
+    // --- FOOTER ---
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
+    doc.text("Generated on-device — no data stored or transmitted.", 15, pageHeight - 12);
+    doc.text(`Page ${pageNum} of ${totalPages}`, pageWidth - 35, pageHeight - 12);
+
+    // Reset defaults for whatever draws next
+    doc.setTextColor(50, 50, 50);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+}
+
    // 1. The Mobile Screen Cycle Engine (Blank -> Tick -> Cross -> Repeat)
 function cycleStatus(btn) {
     const states = ["", "✓", "✗"];
@@ -108,6 +147,12 @@ async function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
+    drawReportTemplate(doc, 1, 1); // draws the static header/footer/border
+
+    // ...keep the rest (projName, inspector, notes, checklist loop) exactly as is,
+    // just start currentY a bit lower, e.g. currentY = 45, since the header is taller now
+
+
     // Fetch field form values
     const projName = document.getElementById('projName').value || 'N/A';
     const inspector = document.getElementById('inspector').value || 'N/A';
@@ -130,7 +175,7 @@ async function generatePDF() {
     doc.text(`Inspector: ${inspector}`, 15, 56);
 
     // DRAW THE TWO-COLUMN PDF CHECKLIST GRID
-    let currentY = 70; // Current vertical layout anchor height coordinate
+    let currentY = 45; // Current vertical layout anchor height coordinate
     
     // Draw Table Header Block
     doc.setFillColor(243, 244, 246);
